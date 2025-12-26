@@ -30,7 +30,8 @@ router.post('/register', validateRegister, async (req, res) => {
 
         const payload = {
             user: {
-                id: user.id
+                id: user.id,
+                role: user.role
             }
         };
 
@@ -55,19 +56,30 @@ router.post('/login', validateLogin, async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        console.log('Login request received for:', email);
         let user = await User.findOne({ email });
+        console.log('DB User lookup result:', user ? 'Found' : 'Not Found');
+
         if (!user) {
+            console.log('Login attempt: User not found for email:', email);
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
+        console.log('Comparing passwords...');
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log('Password match:', isMatch);
+
         if (!isMatch) {
+            console.log('Login attempt: Password mismatch for user:', email);
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
+
+        console.log('Login success for:', email);
 
         const payload = {
             user: {
-                id: user.id
+                id: user.id,
+                role: user.role
             }
         };
 
@@ -77,6 +89,7 @@ router.post('/login', validateLogin, async (req, res) => {
             { expiresIn: 360000 },
             (err, token) => {
                 if (err) throw err;
+                console.log('DEBUG Login: Generated token for user role:', user.role);
                 res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
             }
         );

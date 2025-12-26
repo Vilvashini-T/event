@@ -15,7 +15,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 // Data Sanitization against NoSQL query injection
-app.use(mongoSanitize());
+// Data Sanitization against NoSQL query injection
+// app.use(mongoSanitize()); // FIXME: Incompatible with Express 5.x, causing TypeError
 
 // Connect to MongoDB
 connectDB();
@@ -29,4 +30,6 @@ app.get('/', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT,
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

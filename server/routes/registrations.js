@@ -85,4 +85,82 @@ router.get('/check/:eventId', auth, async (req, res) => {
     }
 });
 
+const adminAuth = require('../middleware/adminAuth');
+
+// @route   GET /api/registrations/analytics
+// @desc    Get registration analytics (Admin only)
+// @access  Private (Admin)
+router.get('/analytics', [auth, adminAuth], async (req, res) => {
+    try {
+        const totalRegistrations = await Registration.countDocuments();
+
+        const registrationsByEvent = await Registration.aggregate([
+            {
+                $group: {
+                    _id: '$event',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'events',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'eventDetails'
+                }
+            },
+            {
+                $unwind: '$eventDetails'
+            },
+            {
+                $project: {
+                    eventTitle: '$eventDetails.title',
+                    count: 1
+                }
+            },
+            { $sort: { count: -1 } }
+        ]);
+
+        res.json({
+            total: totalRegistrations,
+            breakdown: registrationsByEvent
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET /api/registrations/export/:eventId
+// @desc    Export registrations for an event as CSV
+// @access  Private (Admin)
+router.get('/export/:eventId', [auth, adminAuth], async (req, res) => {
+    try {
+        const registrations = await Registration.find({ event: req.params.eventId })
+            .populate('user', ['name', 'email']);
+
+        const event = await Event.findById(req.params.eventId);
+        if (!event) return res.status(404).json({ msg: 'Event not found' });
+
+        // CSV Header
+        let csv = 'Name,Email,Registration Date\n';
+
+        // CSV Rows
+        registrations.forEach(reg => {
+            const name = reg.user ? reg.user.name : 'Unknown';
+            const email = reg.user ? reg.user.email : 'Unknown';
+            const date = new Date(reg.registeredAt).toLocaleDateString();
+            csv += `"${name}","${email}","${date}"\n`;
+        });
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="registrations-${event.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv"`);
+        res.status(200).send(csv);
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;

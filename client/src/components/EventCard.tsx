@@ -20,44 +20,50 @@ const EventCard = ({ event }: { event: EventProps }) => {
     });
 
     return (
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <div style={{ height: '12rem', backgroundColor: 'rgba(255,255,255,0.05)', position: 'relative' }}>
+        <div className="card flex flex-col h-full group cursor-pointer">
+            <div className="relative h-48 bg-gray-50 overflow-hidden">
                 {event.image ? (
-                    <img src={event.image} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img
+                        src={event.image}
+                        alt={event.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                 ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '1.2rem', fontWeight: 'bold' }}>
-                        NO IMAGE
+                    <div className="w-full h-full flex items-center justify-center text-secondary text-sm font-medium bg-gray-100">
+                        Image Placeholder
                     </div>
                 )}
-                <div style={{ position: 'absolute', top: '1rem', right: '1rem', backgroundColor: 'var(--bg-dark)', padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent-primary)', textTransform: 'uppercase', border: '1px solid var(--border-color)' }}>
+                <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm shadow-sm text-xs font-bold text-teal uppercase tracking-wide">
                     {event.category}
                 </div>
             </div>
 
-            <div className="p-4" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 className="text-primary" style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.title}</h3>
+            <div className="p-5 flex flex-col flex-grow">
+                <h3 className="text-lg font-bold mb-3 text-primary truncate leading-tight group-hover:text-teal transition-colors">
+                    {event.title}
+                </h3>
 
-                <div className="text-secondary" style={{ marginBottom: '1rem', fontSize: '0.875rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                        <span style={{ fontWeight: 600, color: 'var(--accent-secondary)' }}>Date:</span>
+                <div className="text-sm text-secondary mb-6 flex flex-col gap-2">
+                    <div className="flex items-center gap-2.5">
+                        <span className="opacity-70">📅</span>
                         <span>{formattedDate}</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                        <span style={{ fontWeight: 600, color: 'var(--accent-secondary)' }}>Time:</span>
+                    <div className="flex items-center gap-2.5">
+                        <span className="opacity-70">⏰</span>
                         <span>{event.startTime}</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontWeight: 600, color: 'var(--accent-secondary)' }}>Venue:</span>
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.venue}</span>
+                    <div className="flex items-center gap-2.5">
+                        <span className="opacity-70">📍</span>
+                        <span className="truncate">{event.venue}</span>
                     </div>
                 </div>
 
-                <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="mt-auto pt-4 border-t border-subtle flex justify-between items-center">
                     <Link
                         to={`/events/${event._id}`}
-                        style={{ color: 'var(--accent-primary)', fontWeight: '500', fontSize: '0.875rem', textDecoration: 'none' }}
+                        className="text-teal font-medium text-sm no-underline hover:opacity-80 transition-opacity flex items-center gap-1"
                     >
-                        View Details &rarr;
+                        View Details <span className="text-lg leading-none">&rarr;</span>
                     </Link>
                 </div>
             </div>

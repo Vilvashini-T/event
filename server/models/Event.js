@@ -37,8 +37,9 @@ const eventSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    category: {
-        type: String, // e.g., "Workshop", "Symposium"
+    type: {
+        type: String,
+        enum: ['Intra', 'Inter'],
         required: true,
     },
     organizer: {

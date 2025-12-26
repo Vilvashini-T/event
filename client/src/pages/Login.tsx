@@ -1,31 +1,25 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-// Removed icons
 
 const Login = () => {
-    // useState to manage form inputs
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Hook to redirect users
+    const navigate = useNavigate();
 
-    // Update state when user types
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent page reload
+        e.preventDefault();
         try {
             const res = await api.post('/auth/login', formData);
-            // Save token to browser storage
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
-            // Redirect to home page
             navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.msg || 'Login failed');
@@ -33,59 +27,62 @@ const Login = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 64px)', backgroundColor: '#F9FAFB', padding: '3rem 1rem' }}>
-            <div style={{ width: '100%', maxWidth: '400px', backgroundColor: 'white', padding: '2rem', borderRadius: '0.75rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
-                <div className="text-center">
-                    <h2 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>Student Login</h2>
-                    <p style={{ fontSize: '0.875rem', color: '#4B5563' }}>
-                        Or <Link to="/register" style={{ color: '#4F46E5', fontWeight: '500', textDecoration: 'none' }}>register for a new account</Link>
+        <div className="flex justify-center items-center min-h-screen pt-20 pb-12 px-4" style={{ backgroundColor: 'var(--bg-page)' }}>
+            <div className="card w-full max-w-md p-8 bg-white shadow-sm">
+                <div className="text-center mb-8">
+                    <h2 className="text-4xl font-bold mb-2 text-primary">Student Login</h2>
+                    <p className="text-sm text-secondary">
+                        Or <Link to="/register" className="text-teal font-medium no-underline hover:opacity-80 transition-opacity">register for a new account</Link>
                     </p>
                 </div>
 
-                <form style={{ marginTop: '2rem' }} onSubmit={handleSubmit}>
-                    {error && <div style={{ backgroundColor: '#FEF2F2', color: '#DC2626', padding: '0.75rem', borderRadius: '0.375rem', fontSize: '0.875rem', marginBottom: '1rem' }}>{error}</div>}
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                    {error && (
+                        <div className="p-3 mb-4 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100">
+                            {error}
+                        </div>
+                    )}
 
-                    <div style={{ marginBottom: '1rem' }}>
-                        <div style={{ position: 'relative' }}>
-                            <span style={{ position: 'absolute', top: '0.75rem', left: '0.75rem', color: '#9CA3AF' }}>👤</span>
+                    <div className="flex flex-col gap-2">
+                        <label className="block text-sm font-medium text-primary">Email Address</label>
+                        <div className="relative">
+                            <span className="absolute top-3 left-3 text-secondary opacity-50">✉️</span>
                             <input
                                 name="email"
                                 type="email"
                                 required
                                 className="form-input"
                                 style={{ paddingLeft: '2.5rem' }}
-                                placeholder="Email address"
+                                placeholder="name@example.com"
                                 value={formData.email}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ position: 'relative' }}>
-                            <span style={{ position: 'absolute', top: '0.75rem', left: '0.75rem', color: '#9CA3AF' }}>🔒</span>
+                    <div className="flex flex-col gap-2">
+                        <label className="block text-sm font-medium text-primary">Password</label>
+                        <div className="relative">
+                            <span className="absolute top-3 left-3 text-secondary opacity-50">🔒</span>
                             <input
                                 name="password"
                                 type="password"
                                 required
                                 className="form-input"
                                 style={{ paddingLeft: '2.5rem' }}
-                                placeholder="Password"
+                                placeholder="••••••••"
                                 value={formData.password}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                        >
-                            Sign in &rarr;
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        className="btn-primary w-full"
+                    >
+                        Sign in &rarr;
+                    </button>
                 </form>
             </div>
         </div>
