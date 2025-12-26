@@ -14,17 +14,17 @@ const CreateEvent = () => {
         organizer: ''
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await api.post('/events', formData); // Using secured API instance
             alert('Event Created Successfully');
             navigate('/admin/manage-events');
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
             const errorMessage = err.response?.data?.error || err.response?.data?.msg || 'Unknown Error';
             alert(`Failed to create event: ${errorMessage}`);

@@ -1,17 +1,6 @@
 import { Link } from 'react-router-dom';
 
-interface EventProps {
-    _id: string;
-    title: string;
-    description: string;
-    date: string;
-    startTime: string;
-    venue: string;
-    image?: string;
-    category: string;
-}
-
-const EventCard = ({ event }: { event: EventProps }) => {
+const EventCard = ({ event }) => {
     // Format the date to look nice (e.g., "October 24, 2025")
     const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
         month: 'short',

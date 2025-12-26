@@ -39,19 +39,19 @@ const edges = [
 ];
 
 // Graph Adjacency List
-const graph: Record<string, Record<string, number>> = {};
+const graph = {};
 edges.forEach(([u, v, w]) => {
-    if (!graph[u as string]) graph[u as string] = {};
-    if (!graph[v as string]) graph[v as string] = {};
-    graph[u as string][v as string] = w as number;
-    graph[v as string][u as string] = w as number;
+    if (!graph[u]) graph[u] = {};
+    if (!graph[v]) graph[v] = {};
+    graph[u][v] = w;
+    graph[v][u] = w;
 });
 
-const dijkstra = (start: string, end: string) => {
+const dijkstra = (start, end) => {
     if (!start || !end) return [];
-    const distances: Record<string, number> = {};
-    const previous: Record<string, string | null> = {};
-    const queue: string[] = [];
+    const distances = {};
+    const previous = {};
+    const queue = [];
 
     Object.keys(nodes).forEach(node => {
         distances[node] = Infinity;
@@ -68,7 +68,7 @@ const dijkstra = (start: string, end: string) => {
 
         if (u === end) {
             const path = [];
-            let temp: string | null = end;
+            let temp = end;
             while (temp) {
                 path.unshift(temp);
                 temp = previous[temp];
@@ -95,13 +95,7 @@ const dijkstra = (start: string, end: string) => {
     return [];
 };
 
-interface NavigationMapProps {
-    startNode: string;
-    endNode: string;
-    onSelectNode?: (id: string, type: 'start' | 'end') => void;
-}
-
-const NavigationMap = ({ startNode, endNode, onSelectNode }: NavigationMapProps) => {
+const NavigationMap = ({ startNode, endNode, onSelectNode }) => {
     const path = useMemo(() => dijkstra(startNode, endNode), [startNode, endNode]);
 
     return (
@@ -119,10 +113,10 @@ const NavigationMap = ({ startNode, endNode, onSelectNode }: NavigationMapProps)
 
                 {/* Edges */}
                 {edges.map(([u, v], i) => {
-                    const uNode = nodes[u as keyof typeof nodes];
-                    const vNode = nodes[v as keyof typeof nodes];
-                    const isPath = path.includes(u as string) && path.includes(v as string) &&
-                        (path.indexOf(u as string) === path.indexOf(v as string) - 1 || path.indexOf(v as string) === path.indexOf(u as string) - 1);
+                    const uNode = nodes[u];
+                    const vNode = nodes[v];
+                    const isPath = path.includes(u) && path.includes(v) &&
+                        (path.indexOf(u) === path.indexOf(v) - 1 || path.indexOf(v) === path.indexOf(u) - 1);
 
                     return (
                         <line

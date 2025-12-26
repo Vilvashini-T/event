@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 
 // Simple Grid visualization
-const MapGrid = ({ startNodeId }: { startNodeId: string }) => {
+const MapGrid = ({ startNodeId }) => {
     // Grid configuration
     const rows = 15;
     const cols = 20;
 
     // Define locations
-    const locations: Record<string, { r: number, c: number, label: string, color: string }> = {
+    const locations = {
         '0-4': { r: 12, c: 2, label: 'Gate 1', color: 'orange' },
         '1-13': { r: 5, c: 18, label: 'Gate 2', color: 'orange' },
         '2-6': { r: 3, c: 8, label: 'Main', color: 'teal' },
@@ -19,7 +19,7 @@ const MapGrid = ({ startNodeId }: { startNodeId: string }) => {
     };
 
     // Path state
-    const [path, setPath] = useState<string[]>([]);
+    const [path, setPath] = useState([]);
 
     useEffect(() => {
         if (startNodeId && locations[startNodeId]) {

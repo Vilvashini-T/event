@@ -1,10 +1,4 @@
-interface EmptyStateProps {
-    message?: string;
-    actionLabel?: string;
-    onAction?: () => void;
-}
-
-const EmptyState = ({ message = "No items found", actionLabel, onAction }: EmptyStateProps) => {
+const EmptyState = ({ message = "No items found", actionLabel, onAction }) => {
     return (
         <div className="text-center" style={{
             padding: '4rem 2rem',

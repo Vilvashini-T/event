@@ -39,7 +39,7 @@ const MyEvents = () => {
                 </div>
             ) : (
                 <div className="grid grid-cols-3">
-                    {registrations.map((reg: any) => (
+                    {registrations.map((reg) => (
                         <div key={reg._id} style={{ position: 'relative' }}>
                             <EventCard event={reg.event} />
                             <div style={{

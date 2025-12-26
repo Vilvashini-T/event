@@ -20,7 +20,7 @@ const ManageRegistrations = () => {
             });
     }, []);
 
-    const handleExport = async (eventId: string, eventTitle: string) => {
+    const handleExport = async (eventId, eventTitle) => {
         try {
             const response = await api.get(`/registrations/export/${eventId}`, {
                 responseType: 'blob', // Important for file download
@@ -57,7 +57,7 @@ const ManageRegistrations = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {events.map((event: any) => (
+                        {events.map((event) => (
                             <tr key={event._id}>
                                 <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{event.title}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-gray-500">{new Date(event.date).toLocaleDateString()}</td>

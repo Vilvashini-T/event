@@ -5,7 +5,7 @@ import api from '../services/api';
 const EventDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [event, setEvent] = useState<any>(null);
+    const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [registering, setRegistering] = useState(false);
     const [isRegistered, setIsRegistered] = useState(false);
@@ -46,7 +46,7 @@ const EventDetails = () => {
             await api.post(`/registrations/${id}`);
             setIsRegistered(true);
             alert('Successfully registered!');
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
             alert(err.response?.data?.msg || 'Registration failed');
         } finally {
